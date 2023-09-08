@@ -1,0 +1,13 @@
+name: AT_Bus_Performance_Dashboard
+title: AT_Bus_Performance_Dashboard
+username: radian
+account: radian
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9802279
+bundleId: 7658949
+url: https://radian.shinyapps.io/AT_Bus_Performance_Dashboard/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: colors_test.xlsm|route_colours.R

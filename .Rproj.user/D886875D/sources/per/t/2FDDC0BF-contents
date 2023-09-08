@@ -1,0 +1,92 @@
+library(tidyverse)
+library(shiny)
+
+# Read in data
+data.df <- readRDS("Data/CLEAN_2019-2023_monthly_full_data")
+
+# Get possible bus route inputs:
+busRoutes.v <- data.df %>%
+  select(Number) %>%
+  unique()
+
+# Get min and max dates
+minDate <- min(data.df$Month)
+maxDate <- max(data.df$Month)
+
+
+
+
+# See above for the definitions of ui and server
+ui <- fluidPage(
+  
+  # App title ----
+  titlePanel("Hello Shiny!"),
+  
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+    
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+      
+      # Input: Slider for the number of bins ----
+      
+      selectInput(inputId = "routeNum",
+                  label = "Select Bus Route:",
+                  choices = busRoutes.v),
+      
+      sliderInput(inputId = "dateRange",
+                  label = "Select Date Range",
+                  min = minDate,
+                  max = maxDate,
+                  value = c(minDate, maxDate)),
+      checkboxGroupInput(inputId = "graphTypes",
+                         label = "Which graphs?",
+                         choices = c("Boardings",
+                                     "Reliability",
+                                     "Punctuality"),
+                         selected = "Boardings"),
+      
+    ),
+    
+    # Main panel for displaying outputs ----
+    mainPanel(
+      
+      # Output: Histogram ----
+      plotOutput(outputId = "boardingsPlot"),
+      plotOutput(outputId = "reliabilityPlot")
+      
+    )
+  )
+)
+    
+
+server <- function(input, output) {
+  output$boardingsPlot <- renderPlot({
+    if ("Boardings" %in% input$graphTypes)
+    {
+      data.df %>%
+        filter(Number == str_to_upper(input$routeNum)) %>%
+        ggplot() +
+        geom_col(aes(x = Month, y = Boardings)) +
+        scale_x_date(limits = c(input$dateRange[1], input$dateRange[2])) +
+        coord_cartesian() +
+        labs(title = input$graphTypes)
+    }
+  })
+  output$reliabilityPlot <- renderPlot({ 
+    if ("Reliability" %in% input$graphTypes)
+    {
+      data.df %>%
+        filter(Number == str_to_upper(input$routeNum)) %>%
+        ggplot() +
+        geom_col(aes(x = Month, y = Boardings)) +
+        scale_x_date(limits = c(input$dateRange[1], input$dateRange[2])) +
+        coord_cartesian() +
+        labs(title = input$graphTypes)
+    }})
+  
+  output$punctualityPlot <- renderPlot({ })
+
+}
+
+shinyApp(ui, server)
