@@ -1,8 +1,12 @@
 # AT-Bus-Dashboard
 
 
-## URL
+## Live Application:
 http://radian.shinyapps.io/AT_Bus_Performance_Dashboard
+
+
+## Video Overview:
+https://youtu.be/3Rwoo78sTGU
 
 
 ## Screenshots
